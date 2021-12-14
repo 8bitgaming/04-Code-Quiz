@@ -1,0 +1,7 @@
+
+.score-timer {
+    display: flex;
+    justify-content: space-between;
+    background-color: deepskyblue;
+}
+
