@@ -1,7 +1,39 @@
+:root {
+    --darkGray: rgba(32, 44, 57, 1);
+    --mediumGray: rgba(40, 56, 69, 1);
+    --brown: rgba(184, 176, 141, 1);
+    --lightbrown: rgba(242, 212, 146, 1);
+    --orangeAction: rgba(242, 149, 89, 1);
+    }
+
+* {
+    font-family: sans-serif;
+}
+
+header h3 {
+    color: var(--lightbrown);
+    padding: 0 25px;
+}
 
 .score-timer {
     display: flex;
     justify-content: space-between;
-    background-color: deepskyblue;
+    background-color: var(--mediumGray)
+}
+
+button {
+    color: var(--darkGray);
+    background-color: var(--brown);
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    border-radius: 10px;
+  }
+
+.questions-answers {
+    display: flex;
+    justify-content: center;
+    text-align: left;
+    width: 100%;
 }
 
