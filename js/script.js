@@ -10,6 +10,7 @@ let currentQuestion = 0
 let scoreIdCounter = 0
 let highScores = []
 let timer
+let highScoreTableRow
 
 //setup default time
 let time = 15
@@ -204,14 +205,24 @@ const setHighScore = (event) => {
     let highScoreId = scoreIdCounter
     let highScoreValue = time
 
+    if (!highScoreName) {
+        alert("You need to put in your initials!");
+        return false;
+      }
+
     let highScoreObj = {
         id: highScoreId,
         name: highScoreName,
         score: highScoreValue
     }
+    //add to array and increment id
+    highScores.push(highScoreObj)
+    highScoreObj.id++
 
-    // setAttribute("score-id", scoreIdCounter);
-    console.log(highScoreObj)
+    //add to local storage
+    localStorage.setItem("highScores", JSON.stringify(highScores));
+  
+    //call high score table to display
 }
 
 const highScore = () => {
@@ -219,13 +230,68 @@ const highScore = () => {
     while (questionAnswers.firstChild) {
         questionAnswers.removeChild(questionAnswers.firstChild)
     }
-    //display high-score table
-    questionAnswers.textContent = `Below are the high-scores:`
     
+    let savedScores = localStorage.getItem("highScores")
+    if (savedScores) {
+        highScores = JSON.parse(savedScores);
+    }  
+    //convert tasks from string back into the original array
+   
+    
+    //display high-score table
+    if (highScores.length > 0) {
+    questionAnswers.textContent = `Below are the high-scores:`
+    } else {
+        questionAnswers.textContent = `There are no high scores!`
+        return
+    }
+  
+    let highScoreTable = document.createElement("table");
+    questionAnswers.appendChild(highScoreTable)
+    highScoreTableRow = document.createElement("tr")
+    highScoreTable.appendChild(highScoreTableRow)
+
+      // loop through savedHighScore array to display in the table
+  for (var i = 0; i < highScores.length; i++) {
+    let scoreData = document.createElement("td")
+    scoreData.textContent = `${highScores[i].id}: ${highScores[i].name} - ${highScores[i].score}`
+    highScoreTableRow.appendChild(scoreData)
+
+    
+
+    // let highScoreTableRowID = document.createElement("tr")
+    // highScoreTableRowID.textContent = "ID"
+    // highScoreTable.appendChild(highScoreTableRowID)
+    // let scoreID = document.createElement("td")
+    // scoreID.id = highScores[i].id
+    // scoreID.textContent = highScores[i].id
+    // highScoreTableRowID.appendChild(scoreID)
+
+    // let highScoreTableRowName = document.createElement("tr")
+    // highScoreTableRowID.textContent = "Name"
+    // highScoreTable.appendChild(highScoreTableRowName)
+    // let scoreName = document.createElement("td")
+    // scoreID.id = highScores[i].id
+    // scoreID.textContent = highScores[i].name
+    // highScoreTableRowName.appendChild(scoreName)
+
+
+    // let highScoreTableRowScore = document.createElement("tr")
+    // highScoreTableRowID.textContent = "Score"
+    // highScoreTable.appendChild(highScoreTableRowScore)
+    // let score = document.createElement("td")
+    // scoreID.id = highScores[i].id
+    // scoreID.textContent = highScores[i].score
+    // highScoreTableRowScore.appendChild(score)
+
+    console.log(highScoreTable)
+
+  }
 
 }
 
 //clear high score function
+// let highScoreClearButton = document.createElement("button");
 
 
 //start program
