@@ -8,12 +8,13 @@ let responseEl = document.querySelector("#response")
 let endGameEl = document.querySelector("#end-game")
 let currentQuestion = 0
 let scoreIdCounter = 0
+let highScoreId
 let highScores = []
 let timer
 let highScoreTableRow
 
 //setup default time
-let time = 15
+let time = 90
 timerDisplay.textContent = `Time: ${time}`
 
 
@@ -22,61 +23,61 @@ timerDisplay.textContent = `Time: ${time}`
 const questionList = [
 {
     id: 0,
-    question: "Commonly included data types do NOT include:",
+    question: "What was the name of the final meeting between Soviet Union, United Kingdom and the United State's leaders in 1945?",
     possibleAnswer: [
-    "strings",
-    "booleans",
-    "alerts",
-    "numbers" 
+    "Yalta Conference",
+    "Potsdam Conference",
+    "Casablanca Conference",
+    "Bretton Woods Conference" 
 ],
-    correctAnswer: "alerts"
+    correctAnswer: "Yalta Conference"
 },
 {
     id: 1,
-    question: "question 2:",
+    question: "During which years did World War II hostilities occur?",
     possibleAnswer: [
-    "answer1",
-    "answer2",
-    "answer3",
-    "answer4" 
+    "1914- 1918",
+    "1938 - 1944",
+    "1939 - 1945",
+    "1941 - 1946" 
 ],
-    correctAnswer: "answer1"
+    correctAnswer: "1939 - 1945"
 },
 
 {
     id: 2,
-    question: "question 3:",
+    question: "Who was the president of the United States at the end of World War II?",
     possibleAnswer: [
-    "apple",
-    "orange",
-    "banana",
-    "apricot" 
+    "Herbert Hoover",
+    "Franklin D. Roosevelt",
+    "Teddy Roosevelt",
+    "Harry S. Truman" 
 ],
-    correctAnswer: "apricot"
+    correctAnswer: "Harry S. Truman"
 },
 
 {
     id: 3,
-    question: "question 4:",
+    question: "Who was the prime minister of Great Britain at the beginning of hostilities during World War II?",
     possibleAnswer: [
-    "apple",
-    "orange",
-    "banana",
-    "apricot" 
+    "Winston Churchill",
+    "Neville Chamberlain",
+    "Stanley Baldwin",
+    "Josef Stalin" 
 ],
-    correctAnswer: "apricot"
+    correctAnswer: "Neville Chamberlain"
 },
 
 {
     id: 4,
-    question: "question 5:",
+    question: "In which country did the D-Day invasion primarily take place?",
     possibleAnswer: [
-    "apple",
-    "orange",
-    "banana",
-    "apricot" 
+    "Belgium",
+    "Germany",
+    "France",
+    "Italy" 
 ],
-    correctAnswer: "apricot"
+    correctAnswer: "France"
 },
 
 ]
@@ -105,7 +106,7 @@ const begin = () => {
 const setupQuiz = () => {
 
     //create the instructions
-    instructionsEl.textContent = "Answer the questions before the time runs out. Each wrong answer will subtract ten seconds from the timer!"
+    instructionsEl.textContent = "Answer the following World War 2 history questions before the time runs out. Each wrong answer will subtract ten seconds from the timer!"
 
     //create the start button
     let instructionButton = document.createElement("button")
@@ -180,7 +181,7 @@ const endGame = () => {
     //create high score entry form
     let highScoreInputForm = document.createElement("input");
     highScoreInputForm.type = "input"
-    highScoreInputForm.placeholder = "Enter Your Initials"
+    highScoreInputForm.placeholder = "Enter Your name"
     highScoreInputForm.name = "high-score"
     highScoreInputForm.className = "form";
     highScoreInputForm.id = "high-score-form";
@@ -200,29 +201,43 @@ const endGame = () => {
 }
 
 const setHighScore = (event) => {
+    //load existing highscores if any exist
+    let savedScores = localStorage.getItem("highScores")
+    if (savedScores) {
+        highScores = JSON.parse(savedScores);
+    }  
+    
     //create high score object and save to local storage
+    console.log(highScores)
     let highScoreName = document.querySelector("input[name='high-score']").value
-    let highScoreId = scoreIdCounter
+    
+    if (highScores.length >0 ) {
+        highScoreArray= highScores.at(-1)
+        highScoreId = highScoreArray.id
+    } else {
+        highScoreId = 0
+    }
+   
     let highScoreValue = time
 
     if (!highScoreName) {
-        alert("You need to put in your initials!");
+        alert("You need to put in your name!");
         return false;
       }
 
     let highScoreObj = {
-        id: highScoreId,
+        id: highScoreId + 1,
         name: highScoreName,
         score: highScoreValue
     }
     //add to array and increment id
     highScores.push(highScoreObj)
-    highScoreObj.id++
-
+ 
     //add to local storage
     localStorage.setItem("highScores", JSON.stringify(highScores));
   
     //call high score table to display
+    highScore()
 }
 
 const highScore = () => {
@@ -231,21 +246,21 @@ const highScore = () => {
         questionAnswers.removeChild(questionAnswers.firstChild)
     }
     
+    //convert tasks from string back into the original array
     let savedScores = localStorage.getItem("highScores")
     if (savedScores) {
         highScores = JSON.parse(savedScores);
     }  
-    //convert tasks from string back into the original array
-   
+      
     
     //display high-score table
     if (highScores.length > 0) {
     questionAnswers.textContent = `Below are the high-scores:`
     } else {
-        questionAnswers.textContent = `There are no high scores!`
+        questionAnswers.textContent = `There are no high scores! Take the quiz to add a high score!`
         return
     }
-  
+ 
     let highScoreTable = document.createElement("table");
     questionAnswers.appendChild(highScoreTable)
     highScoreTableRow = document.createElement("tr")
@@ -256,48 +271,36 @@ const highScore = () => {
     let scoreData = document.createElement("td")
     scoreData.textContent = `${highScores[i].id}: ${highScores[i].name} - ${highScores[i].score}`
     highScoreTableRow.appendChild(scoreData)
-
-    
-
-    // let highScoreTableRowID = document.createElement("tr")
-    // highScoreTableRowID.textContent = "ID"
-    // highScoreTable.appendChild(highScoreTableRowID)
-    // let scoreID = document.createElement("td")
-    // scoreID.id = highScores[i].id
-    // scoreID.textContent = highScores[i].id
-    // highScoreTableRowID.appendChild(scoreID)
-
-    // let highScoreTableRowName = document.createElement("tr")
-    // highScoreTableRowID.textContent = "Name"
-    // highScoreTable.appendChild(highScoreTableRowName)
-    // let scoreName = document.createElement("td")
-    // scoreID.id = highScores[i].id
-    // scoreID.textContent = highScores[i].name
-    // highScoreTableRowName.appendChild(scoreName)
-
-
-    // let highScoreTableRowScore = document.createElement("tr")
-    // highScoreTableRowID.textContent = "Score"
-    // highScoreTable.appendChild(highScoreTableRowScore)
-    // let score = document.createElement("td")
-    // scoreID.id = highScores[i].id
-    // scoreID.textContent = highScores[i].score
-    // highScoreTableRowScore.appendChild(score)
-
-    console.log(highScoreTable)
-
   }
 
+    //create button to clear high scores
+    let highScoreClearButton = document.createElement("button");
+    highScoreClearButton.id = "clear-high-score"
+    highScoreClearButton.textContent = "Clear High Scores"
+    questionAnswers.appendChild(highScoreClearButton)
+    document.querySelector("#clear-high-score").addEventListener("click", clearHighScore)
+
+    //create try again button
+    // let tryAgain = document.createElement("button");
+    // tryAgain.id = "try-again"
+    // tryAgain.textContent = "Try Again"
+    // questionAnswers.appendChild(tryAgain)
+    // document.querySelector("#try-again").addEventListener("click", setupQuiz)
 }
 
 //clear high score function
-// let highScoreClearButton = document.createElement("button");
+const clearHighScore = () => {
+    localStorage.clear()
+    highScores = []
+    highScore()
+}
+
 
 
 //start program
 setupQuiz()
 
 // event listeners
-document.querySelector(".start-button").addEventListener("click", e => {begin()})
+document.querySelector(".start-button").addEventListener("click", begin)
 document.querySelector("#answers").addEventListener("click", checkAnswer)
 document.querySelector("#high-score").addEventListener("click", highScore)
