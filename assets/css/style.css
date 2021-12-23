@@ -32,6 +32,10 @@ button {
     margin: 5px;
   }
 
+  button:hover {
+    background-color: var(--lightbrown);
+  }
+
 
 #question-answers {
     display: flex;

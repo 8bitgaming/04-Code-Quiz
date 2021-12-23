@@ -6,8 +6,10 @@ let questionEl = document.querySelector("#questions")
 let answersEl = document.querySelector("#answers")
 let responseEl = document.querySelector("#response")
 let endGameEl = document.querySelector("#end-game")
-let formEl = document.querySelector("#high-score")
 let currentQuestion = 0
+let scoreIdCounter = 0
+let highScores = []
+let timer
 
 //setup default time
 let time = 15
@@ -52,12 +54,36 @@ const questionList = [
     correctAnswer: "apricot"
 },
 
+{
+    id: 3,
+    question: "question 4:",
+    possibleAnswer: [
+    "apple",
+    "orange",
+    "banana",
+    "apricot" 
+],
+    correctAnswer: "apricot"
+},
+
+{
+    id: 4,
+    question: "question 5:",
+    possibleAnswer: [
+    "apple",
+    "orange",
+    "banana",
+    "apricot" 
+],
+    correctAnswer: "apricot"
+},
+
 ]
 
 // Start timer and remove initial instructions
 const begin = () => {
 
-    const timer = setInterval(() => {
+    timer = setInterval(() => {
         if (time > 0){ 
             time--
             timerDisplay.textContent = `Time: ${time}`
@@ -119,22 +145,16 @@ const checkAnswer = (event) => {
 
     if (targetEl === correct) {
         responseEl.textContent = "Correct!"
-        console.log("correct")
-        if (time <= 0){
-            time = 0
-            timerDisplay.textContent = `Time: ${time}`
-            endGame()
-        }
         currentQuestion++
     } else {
         responseEl.textContent = "Wrong!"
         // console.log("wrong")
-        time = time - 10
-        if (time <= 0){
+        if (time > 10) {
+            time = time - 10
+        } else {
             time = 0
-            timerDisplay.textContent = `Time: ${time}`
-            endGame()
-        }
+            timerDisplay.textContent = `Time: ${time}`  
+            }
         currentQuestion++
     }
     quiz()
@@ -155,8 +175,43 @@ const endGame = () => {
     }
     //display end game message and score entry
     endGameEl.textContent = `All Done! Your final score was ${time}`
-    var taskNameInput = document.querySelector("input[name='task-name']").value;
-    formEl.textContent = `Enter your initials:`  
+
+    //create high score entry form
+    let highScoreInputForm = document.createElement("input");
+    highScoreInputForm.type = "input"
+    highScoreInputForm.placeholder = "Enter Your Initials"
+    highScoreInputForm.name = "high-score"
+    highScoreInputForm.className = "form";
+    highScoreInputForm.id = "high-score-form";
+    endGameEl.appendChild(highScoreInputForm);
+
+    //high score entry button
+    let highScoreInputButton = document.createElement("button");
+    highScoreInputButton.className = "button";
+    highScoreInputButton.textContent = "Submit"
+    highScoreInputButton.id = "high-score-button"
+    endGameEl.appendChild(highScoreInputButton);
+
+    //listener for input
+    document.querySelector("#high-score-button").addEventListener("click", setHighScore )
+   
+ 
+}
+
+const setHighScore = (event) => {
+    //create high score object and save to local storage
+    let highScoreName = document.querySelector("input[name='high-score']").value
+    let highScoreId = scoreIdCounter
+    let highScoreValue = time
+
+    let highScoreObj = {
+        id: highScoreId,
+        name: highScoreName,
+        score: highScoreValue
+    }
+
+    // setAttribute("score-id", scoreIdCounter);
+    console.log(highScoreObj)
 }
 
 const highScore = () => {
@@ -180,64 +235,3 @@ setupQuiz()
 document.querySelector(".start-button").addEventListener("click", e => {begin()})
 document.querySelector("#answers").addEventListener("click", checkAnswer)
 document.querySelector("#high-score").addEventListener("click", highScore)
-
-
-
-
-
-
-//potential code for creating questions
-
-    // for (i = 0; i < questions.length; i++) {
-    //     let question = document.createElement("h2")
-    //     question.textContent = questions[i].question
-    //     answers.appendChild(question)
-
-    //     // var size = Object.keys(questions[i].possibleAnswer).length;
-      
-    //     for (const answer in questions[i].possibleAnswer) {
-    //         // let text = JSON.stringify(questions.answer)
-    //         console.log(answer)
-    //         createButton(answers, answer, "answer-button" )
-    //     }
-
-    //     // questions[i].possibleAnswer.forEach(element => {createButton(answers, element, "answer-button")
-    //     // Object.keys(questions[i].possibleAnswer).forEach(key => {console.log(key, questions[key]) })
-
-    // }
-
-
-    //utility function to create a button
-// const createButton = (appendTo, text, id, ) => {
-//     var buttonEl = document.createElement("button");
-//     buttonEl.textContent = text;
-//     buttonEl.className = "button";
-//     buttonEl.setAttribute("id", id);
-//     appendTo.appendChild(buttonEl);
-// }
-
-
-    // //setup each question
-    // console.log("Display a question")
-    // if (currentQuestion < questionList.length) {
-    //     questionEl.textContent = questionList[currentQuestion].question
-    //     // console.log("question:", questionList[currentQuestion].possibleAnswer.a)
-
-    //     //clear any previous existing buttons
-    //     while (answersEl.firstChild) {
-    //         answersEl.removeChild(answersEl.firstChild)
-    //         }
-
-    //     for (const answer in questionList[currentQuestion].possibleAnswer) {
-
-    //         console.log("answers buttons:", answer)
-
-    //         //create the answer buttons
-    //         let buttonEl = document.createElement("button");
-    //         buttonEl.textContent = answer;
-    //         buttonEl.className = "button";
-    //         answersEl.appendChild(buttonEl);
-    //     }      
-    // } else {
-    //     endGame()
-    // }
