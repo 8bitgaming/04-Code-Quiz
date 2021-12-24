@@ -12,12 +12,12 @@ let highScoreId
 let highScores = []
 let timer
 let highScoreTableRow
+let responseMessage
+
 
 //setup default time
 let time = 90
 timerDisplay.textContent = `Time: ${time}`
-
-
 
 //array of questions
 const questionList = [
@@ -126,6 +126,7 @@ const quiz = () => {
                 while (answersEl.firstChild) {
                     answersEl.removeChild(answersEl.firstChild)
                     }
+
             //create answer list
             const possibleAnswers = questionList[currentQuestion].possibleAnswer
             for(var j = 0; j< possibleAnswers.length; j++){
@@ -145,12 +146,17 @@ const checkAnswer = (event) => {
     let targetEl = event.target.value
     let correct = questionList[currentQuestion].correctAnswer
 
+    if(!responseMessage) {
+    responseMessage = document.createElement("div")
+    responseMessage.id = "response-message"
+    responseEl.appendChild(responseMessage)
+    }
+
     if (targetEl === correct) {
-        responseEl.textContent = "Correct!"
+        responseMessage.textContent = "Correct!"
         currentQuestion++
     } else {
-        responseEl.textContent = "Wrong!"
-        // console.log("wrong")
+        responseMessage.textContent = "Wrong!"
         if (time > 10) {
             time = time - 10
         } else {
@@ -183,7 +189,7 @@ const endGame = () => {
     highScoreInputForm.type = "input"
     highScoreInputForm.placeholder = "Enter Your name"
     highScoreInputForm.name = "high-score"
-    highScoreInputForm.className = "form";
+    highScoreInputForm.className = "form col-12";
     highScoreInputForm.id = "high-score-form";
     endGameEl.appendChild(highScoreInputForm);
 
@@ -254,6 +260,8 @@ const highScore = () => {
       
     
     //display high-score table
+    questionAnswers.className = "fs-2"
+
     if (highScores.length > 0) {
     questionAnswers.textContent = `Below are the high-scores:`
     } else {
@@ -264,12 +272,14 @@ const highScore = () => {
     let highScoreTable = document.createElement("table");
     questionAnswers.appendChild(highScoreTable)
     highScoreTableRow = document.createElement("tr")
+    highScoreTableRow.className = "row fs-6"
     highScoreTable.appendChild(highScoreTableRow)
 
       // loop through savedHighScore array to display in the table
   for (var i = 0; i < highScores.length; i++) {
     let scoreData = document.createElement("td")
     scoreData.textContent = `${highScores[i].id}: ${highScores[i].name} - ${highScores[i].score}`
+    scoreData.className = "high-score col-12 m-1 "
     highScoreTableRow.appendChild(scoreData)
   }
 
@@ -280,7 +290,7 @@ const highScore = () => {
     questionAnswers.appendChild(highScoreClearButton)
     document.querySelector("#clear-high-score").addEventListener("click", clearHighScore)
 
-    //create try again button
+    // //create try again button
     // let tryAgain = document.createElement("button");
     // tryAgain.id = "try-again"
     // tryAgain.textContent = "Try Again"

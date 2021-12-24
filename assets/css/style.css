@@ -57,7 +57,7 @@ button {
     align-items: flex-start;
 }
 
-#response {
+#response-message {
     border-top: 1px var(--darkGray) solid;
 }
 
@@ -65,3 +65,6 @@ button {
     font-size: larger;
 }
 
+.high-score {
+    background-color: var(--lightbrown);
+}
