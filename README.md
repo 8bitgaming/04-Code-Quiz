@@ -9,7 +9,7 @@ This quiz lets you test your knowledge about World War II. You get 1.5 minutes t
 * Javascript
 
 ## Website
-https://8bitgaming.github.io/04-Code-Quiz/
+https://github.com/8bitgaming/04-Test-Your-Knowledge-WW2
 
 ![screenshot of the password generator with a password](./assets/images/screenshot.PNG?raw=true)
 
